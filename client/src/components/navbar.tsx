@@ -17,7 +17,7 @@ export default function Navbar() {
     <div className="relative">
       <nav className="flex items-center justify-between px-8 py-6 bg-[#E5E5E5] border-b border-gray-300">
         {/* Logo */}
-        <div className="text-lg text-sm md:flex tracking-[0.3em] font-medium font-serif">
+        <div className="text-lg md:flex tracking-[0.3em] font-medium font-serif">
           THE ARCHIVE
         </div>
 
@@ -41,8 +41,8 @@ export default function Navbar() {
 
         {/* icon and haumburger */}
         <div className="flex items-center gap-6 text-gray-700">
-            <input type="text" placeholder="search" className="w-[200px] sm:w-[200px]
-            group-hover:w-[300px] transition-all duration-300 rounded-full 
+            <input type="text" placeholder="search" className="w-200px sm:w-200px
+            group-hover:w-300px transition-all duration-300 rounded-full 
             border-black-300 px-2 py-1 focus:outline-double focus:boder-8 focus:border-organge-400 "/>
           <ShoppingBag
             size={18}
@@ -69,9 +69,9 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile Dropdown r */}
+      {/* Mobile Dropdown*/}
       {menuOpen && (
-        <div className="md:hidden absolute top-full left-0 right-0 bg-[#E5E5E5] border-b border-gray-300 flex flex-col px-8 py-4 gap-5 z-50">
+        <div className="md:hidden absolute top-full left-0 right-0 bg-#E5E5E5 border-b border-gray-300 flex flex-col px-8 py-4 gap-5 z-50">
           {navLinks.map((link) => (
             <button
               key={link}

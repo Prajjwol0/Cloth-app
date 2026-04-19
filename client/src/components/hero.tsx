@@ -8,7 +8,7 @@ export default function Hero() {
         className="absolute inset-0 w-full h-full object-cover z-0"
       />
 
-      <div className="absolute z-10 h-full flex flex-col justify-center px-12 md:px-20 text-white">
+      <div className="absolute z-10000 h-full flex flex-col justify-center px-12 md:py-20 text-white">
         <p className="text-[10px] tracking-[0.3em] uppercase mb-4 opacity-90">
           WINTER COLLECTION MMXXIV
         </p>
