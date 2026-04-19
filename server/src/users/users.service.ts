@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -14,6 +14,24 @@ export class UsersService {
   ) {}
 
   async createUser(createUserDto: CreateUserDto) {
+
+    const existingEmail = await this.userRepo.findOne({
+      where : { email: createUserDto.email}
+    })
+    if(existingEmail){
+      console.log(' Email already exists!! ');
+      throw new ConflictException(" Email already exists!! ")
+    }
+
+    const existingNum = await this.userRepo.findOne({
+      where: { contact: createUserDto.contact }
+    })
+
+        if (existingNum) {
+          console.log(' Contact already exists!! ');
+          throw new ConflictException(' Contact already exists!! ');
+        }
+
     const user = this.userRepo.create(createUserDto)
     return this.userRepo.save(user);
   }
@@ -31,9 +49,14 @@ export class UsersService {
   }
 
   async findOneUser(id: string) {
-    return await this.userRepo.findOne({
+    const user = await this.userRepo.findOne({
       where: { id },
     });
+    if(!user){
+            throw new NotFoundException(`user with id:${id} not found`);
+
+    }
+    return user
   }
 
   async updateUser(id: string, updateUserDto: UpdateUserDto) {
@@ -41,11 +64,21 @@ export class UsersService {
       where : {id},
     });
     if(!user){
-       throw new NotFoundException('User not found');
+             throw new NotFoundException(`user with id:${id} not found`);
+
     }
     await this.userRepo.update(id, updateUserDto)
+    // const updatedUser = await this.userRepo.findOne({
+    //   where : {id},
+    // })
 
-    // return await this.
+    return {
+      message: 'User updated! ',
+      updatedUser:await this.userRepo.findOne({
+        where : {id}
+      })
+    };
+    
   }
 
   async remove(id: string) {
@@ -53,12 +86,12 @@ export class UsersService {
       where: {id}
     })
     if(!user){
-      throw new NotFoundException("User not found")
+      throw new NotFoundException(`user with id:${id} not found`)
     }
     await this.userRepo.remove(user)
 
     return {
-      message: "User removed!!"
-    };
+      message: `User with id:${id} removed`
+    }
   }
 }
