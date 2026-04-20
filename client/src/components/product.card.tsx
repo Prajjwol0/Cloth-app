@@ -1,4 +1,4 @@
-import {  useGetAllProductApi } from "../hooks/clothhooks";
+import {  useGetAllProductApi } from "../hooks/usegetallproduct.ts";
 
 
 

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ShoppingBag, User, Menu, X, Search } from "lucide-react";
+import { ShoppingBag, User, Menu, X, } from "lucide-react";
 
 // Updated navLinks to include href paths for routing
 const navLinks = [
