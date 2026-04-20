@@ -1,12 +1,13 @@
 import { useState } from "react";
-import { ShoppingBag, User, Menu, X } from "lucide-react";
+import { ShoppingBag, User, Menu, X, Search } from "lucide-react";
 
+// Updated navLinks to include href paths for routing
 const navLinks = [
-  "COLLECTIONS",
-  "MENSWEAR",
-  "WOMENSWEAR",
-  "ATELIER",
-  "JOURNAL",
+  { name: "COLLECTIONS", href: "/collections" },
+  { name: "MENSWEAR", href: "/menswear" },
+  { name: "WOMENSWEAR", href: "/womenswear" },
+  { name: "ATELIER", href: "/atelier" },
+  { name: "JOURNAL", href: "/journal" },
 ];
 
 export default function Navbar() {
@@ -16,34 +17,43 @@ export default function Navbar() {
   return (
     <div className="relative">
       <nav className="flex items-center justify-between px-8 py-6 bg-[#E5E5E5] border-b border-gray-300">
-        {/* Logo */}
-        <div className="text-lg md:flex tracking-[0.3em] font-medium font-serif">
+       
+        <a
+          href="/"
+          className="text-lg md:flex tracking-[0.3em] font-medium font-serif"
+        >
           THE ARCHIVE
-        </div>
+        </a>
 
-        {/* Nav Links  */}
+        {/* Nav Links */}
         <div className="hidden md:flex gap-10">
           {navLinks.map((link) => (
-            <button
-              key={link}
-              onClick={() => setActive(link)}
-              className={`text-sm tracking-[0.2em] transition-all pb-1
+            <a
+              key={link.name}
+              href={link.href}
+              onClick={() => setActive(link.name)}
+              className={`text-sm tracking-[0.2em] transition-all pb-1 border-b-2
                 ${
-                  active === link
-                    ? "border-b border-black text-black"
-                    : "text-gray-500 hover:text-black"
+                  active === link.name
+                    ? "border-black text-black"
+                    : "border-transparent text-gray-500 hover:text-black"
                 }`}
             >
-              {link}
-            </button>
+              {link.name}
+            </a>
           ))}
         </div>
 
-        {/* icon and haumburger */}
+        {/* Icons and Search */}
         <div className="flex items-center gap-6 text-gray-700">
-            <input type="text" placeholder="search" className="w-200px sm:w-200px
-            group-hover:w-300px transition-all duration-300 rounded-full 
-            border-black-300 px-2 py-1 focus:outline-double focus:boder-8 focus:border-organge-400 "/>
+          <div className="relative hidden sm:block">
+            <input
+              type="text"
+              placeholder="Search..."
+              className="w-150px focus:w-200px transition-all duration-300 rounded-full border border-gray-300 px-4 py-1 text-sm focus:outline-none focus:border-orange-400 bg-transparent"
+            />
+          </div>
+
           <ShoppingBag
             size={18}
             strokeWidth={1}
@@ -55,7 +65,7 @@ export default function Navbar() {
             className="cursor-pointer hover:text-black"
           />
 
-          {/*  mobile only */}
+          {/* Mobile Hamburger */}
           <button
             className="md:hidden cursor-pointer hover:text-black"
             onClick={() => setMenuOpen(!menuOpen)}
@@ -69,21 +79,22 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile Dropdown*/}
+      {/* Mobile Dropdown */}
       {menuOpen && (
-        <div className="md:hidden absolute top-full left-0 right-0 bg-#E5E5E5 border-b border-gray-300 flex flex-col px-8 py-4 gap-5 z-50">
+        <div className="md:hidden absolute top-full left-0 right-0 bg-[#E5E5E5] border-b border-gray-300 flex flex-col px-8 py-4 gap-5 z-50">
           {navLinks.map((link) => (
-            <button
-              key={link}
+            <a
+              key={link.name}
+              href={link.href}
               onClick={() => {
-                setActive(link);
+                setActive(link.name);
                 setMenuOpen(false);
               }}
-              className={`text-sm tracking-[0.2em] text-left transition-all
-                ${active === link ? "text-black font-medium" : "text-gray-500 hover:text-black"}`}
+              className={`text-sm tracking-[0.2em] transition-all
+                ${active === link.name ? "text-black font-medium" : "text-gray-500 hover:text-black"}`}
             >
-              {link}
-            </button>
+              {link.name}
+            </a>
           ))}
         </div>
       )}
