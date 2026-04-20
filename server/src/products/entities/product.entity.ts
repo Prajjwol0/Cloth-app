@@ -1,16 +1,13 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Category } from '../../categories/entities/category.entity';
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Category } from "../../categories/entities/category.entity";
+import { ProductVariant } from "../../product-variant/entities/product-variant.entity";
 
 @Entity()
 export class Product {
-  @PrimaryGeneratedColumn({
-    type: 'bigint',
-  })
+  @PrimaryGeneratedColumn({ type: 'bigint' })
   id!: string;
 
-  @Column({
-    nullable: false,
-  })
+  @Column()
   name!: string;
 
   @Column('text')
@@ -19,23 +16,23 @@ export class Product {
   @Column()
   brand!: string;
 
-  @Column('decimal', { precision: 10, scale: 2 })
-  price!: number;
-
-  @Column('decimal', { precision: 10, scale: 2 })
-  discount!: number;
-
-  @Column('text')
-  currency!: string;
-
   @Column({ default: true })
   isActive!: boolean;
 
-  //   Relations:
-  @ManyToOne(() => Category, category => category.products,{
-    onDelete: "SET NULL",
+  @CreateDateColumn()
+  createdAt!: Date;
+
+  @UpdateDateColumn()
+  updatedAt!: Date;
+
+  @ManyToOne(() => Category, (category) => category.products, {
+    onDelete: 'SET NULL',
     nullable: true,
   })
   category!: Category | null;
 
+  @OneToMany(() => ProductVariant, (variant) => variant.product, {
+    cascade: true,
+  })
+  variants!: ProductVariant[];
 }

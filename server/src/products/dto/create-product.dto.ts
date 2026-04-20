@@ -1,46 +1,80 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
+  IsArray,
   IsBoolean,
   IsNumber,
   IsOptional,
   IsString,
-  IsUUID,
   Min,
+  ValidateNested,
 } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-export class CreateProductDto {
-  @ApiProperty({ example: 'T-shirt' })
+class CreateVariantDto {
+  @ApiProperty({ example: 'M' })
   @IsString()
-  name!: string;
+  size!: string;
 
-  @ApiProperty({ example: 'Sigma boy T-shirt' })
+  @ApiProperty({ example: 'Black' })
   @IsString()
-  description!: string;
+  colour!: string;
 
-  @ApiProperty({ example: 'Sportune' })
-  @IsString()
-  brand!: string;
-
-  @ApiProperty({ example: 5000 })
+  @ApiProperty({ example: 1999 })
+  @Type(() => Number)
   @IsNumber()
   @Min(0)
   price!: number;
 
-  @ApiProperty({ example: 4000, required: false })
+  @ApiPropertyOptional({ example: 1499 })
   @IsOptional()
+  @Type(() => Number)
   @IsNumber()
   @Min(0)
   discountPrice?: number;
 
-  @ApiProperty({ example: 'NPR' })
+  @ApiProperty({ example: 50 })
+  @Type(() => Number)
+  @IsNumber()
+  stock!: number;
+}
+
+export class CreateProductDto {
+  @ApiProperty({ example: 'Nike Air Max' })
   @IsString()
-  currency!: string;
+  name!: string;
 
-  @ApiProperty({ example: true })
+  @ApiProperty({ example: 'Comfortable running shoes with air cushioning' })
+  @IsString()
+  description!: string;
+
+  @ApiProperty({ example: 'Nike' })
+  @IsString()
+  brand!: string;
+
+  @ApiProperty({ example: 1 })
+  @Type(() => Number)
+  @IsNumber()
+  categoryId!: number;
+
+  @ApiPropertyOptional({ example: true })
+  @IsOptional()
   @IsBoolean()
-  isActive!: boolean;
+  isActive?: boolean;
 
-  @ApiProperty({ example: 'uuid-category-id' })
-  @IsUUID()
-  categoryId!: string;
+  @ApiProperty({
+    type: [Object],
+    example: [
+      {
+        size: 'M',
+        colour: 'Black',
+        price: 1999,
+        discountPrice: 500,
+        stock: 50,
+      },
+    ],
+  })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateVariantDto)
+  variants!: CreateVariantDto[];
 }
