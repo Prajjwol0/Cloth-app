@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Product } from '../../products/entities/product.entity';
 
 @Entity()
 export class Category {
@@ -17,4 +18,11 @@ export class Category {
     type: 'text',
   })
   cDescription!: string;
+
+
+// Relation
+
+@OneToMany(()=> Product, product=> product.category)
+products!: Product[];
+
 }
