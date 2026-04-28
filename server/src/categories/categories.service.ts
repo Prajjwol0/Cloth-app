@@ -45,8 +45,7 @@ export class CategoriesService {
   }
 
   async update(id: string, updateCategoryDto: UpdateCategoryDto) {
-    const category = await this.findOne(id); // reuse your method
-
+    const category = await this.findOne(id);
     const updated = Object.assign(category, updateCategoryDto);
     await this.categoryRepo.save(updated);
 

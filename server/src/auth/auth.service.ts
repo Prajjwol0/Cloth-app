@@ -1,17 +1,16 @@
 import {
   ConflictException,
+  ForbiddenException,
   Injectable,
-  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
-import { UserRoles } from '../common/common.enum';
 import { User } from '../users/entities/user.entity';
-import { RegisterDto } from './dto/register-auth.dto';
 import { LoginDto } from './dto/login-auth.dto';
-import { JwtService } from '@nestjs/jwt';
+import { RegisterDto } from './dto/register-auth.dto';
 
 @Injectable()
 export class AuthService {
@@ -31,11 +30,16 @@ export class AuthService {
     const salt = Number(process.env.BCRYPT_SALT_ROUNDS) || 7;
     const hashedPw = await bcrypt.hash(dto.password, salt);
 
+    const registeredRole = dto.role.trim().toLowerCase();
+    const allowedRoles = ['client', 'shopkeeper'];
+    if (!allowedRoles.includes(registeredRole)) {
+      throw new ForbiddenException('Roles can be either Client or Shopkeeper');
+    }
     const user = this.userRepo.create({
       name: dto.name,
       email: dto.email,
       password: hashedPw,
-      role: UserRoles.USER,
+      role: registeredRole,
     });
 
     const savedUser = await this.userRepo.save(user);

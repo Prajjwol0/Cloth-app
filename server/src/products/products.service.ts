@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -18,12 +18,12 @@ export class ProductsService {
       brand: createProductDto.brand,
       isActive: createProductDto.isActive ?? true,
 
-      //  CATEGORY 
+      //  CATEGORY
       category: createProductDto.categoryId
         ? ({ id: createProductDto.categoryId } as any)
         : null,
 
-      //  VARIANTS 
+      //  VARIANTS
       variants: createProductDto.variants.map((v) => ({
         size: v.size,
         colour: v.colour,
@@ -50,15 +50,32 @@ export class ProductsService {
     });
   }
 
-  async findOne(id: number) {
-    return `This action returns a #${id} product`;
+  async findOne(id: string) {
+    const product = await this.productRepo.findOne({
+      where: { id },
+    });
+    return product;
   }
 
-  async update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  async update(id: string, updateProductDto: UpdateProductDto) {
+    const product = await this.productRepo.findOne({
+      where: { id },
+    });
+    if (!product) {
+      throw new NotFoundException('Product not found!!');
+    }
+    const updatedProduct = Object.assign(product, updateProductDto);
+    return updatedProduct;
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
+    const product = await this.productRepo.findOne({
+      where: { id },
+    });
+    if (!product) {
+      throw new NotFoundException('Product not found!!');
+    }
+    await this.productRepo.remove(product);
     return `This action removes a #${id} product`;
   }
 }
