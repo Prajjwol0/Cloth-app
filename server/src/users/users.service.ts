@@ -1,13 +1,8 @@
-import {
-  ConflictException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
@@ -16,27 +11,27 @@ export class UsersService {
     private userRepo: Repository<User>,
   ) {}
 
-  async createUser(createUserDto: CreateUserDto) {
-    const existingEmail = await this.userRepo.findOne({
-      where: { email: createUserDto.email },
-    });
-    if (existingEmail) {
-      console.log(' Email already exists!! ');
-      throw new ConflictException(' Email already exists!! ');
-    }
+  // async createUser(createUserDto: CreateUserDto) {
+  //   const existingEmail = await this.userRepo.findOne({
+  //     where: { email: createUserDto.email },
+  //   });
+  //   if (existingEmail) {
+  //     console.log(' Email already exists!! ');
+  //     throw new ConflictException(' Email already exists!! ');
+  //   }
 
-    const existingNum = await this.userRepo.findOne({
-      where: { contact: createUserDto.contact },
-    });
+  //   const existingNum = await this.userRepo.findOne({
+  //     where: { contact: createUserDto.contact },
+  //   });
 
-    if (existingNum) {
-      console.log(' Contact already exists!! ');
-      throw new ConflictException(' Contact already exists!! ');
-    }
+  //   if (existingNum) {
+  //     console.log(' Contact already exists!! ');
+  //     throw new ConflictException(' Contact already exists!! ');
+  //   }
 
-    const user = this.userRepo.create(createUserDto);
-    return this.userRepo.save(user);
-  }
+  //   const user = this.userRepo.create(createUserDto);
+  //   return this.userRepo.save(user);
+  // }
 
   async findAllUser() {
     return await this.userRepo.find({
@@ -53,6 +48,13 @@ export class UsersService {
   async findOneUser(id: string) {
     const user = await this.userRepo.findOne({
       where: { id },
+      select: {
+        name: true,
+        contact: true,
+        email: true,
+        role: true,
+        id: true,
+      },
     });
     if (!user) {
       throw new NotFoundException(`user with id:${id} not found`);

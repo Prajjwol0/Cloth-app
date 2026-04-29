@@ -1,6 +1,15 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { Category } from "../../categories/entities/category.entity";
-import { ProductVariant } from "../../product-variant/entities/product-variant.entity";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { Category } from '../../categories/entities/category.entity';
+import { ProductVariant } from '../../product-variant/entities/product-variant.entity';
+import { User } from '../../users/entities/user.entity';
 
 @Entity()
 export class Product {
@@ -35,4 +44,12 @@ export class Product {
     cascade: true,
   })
   variants!: ProductVariant[];
+
+  @ManyToOne(() => User, (user) => user.products, {
+    onDelete: 'CASCADE',
+  })
+  owner!: User;
+
+  @Column()
+  ownerId!: string;
 }

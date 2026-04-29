@@ -24,13 +24,14 @@ export class ProductsService {
         : null,
 
       //  VARIANTS
-      variants: createProductDto.variants.map((v) => ({
-        size: v.size,
-        colour: v.colour,
-        price: v.price,
-        discountPrice: v.discountPrice ?? null,
-        stock: v.stock,
-      })),
+      variants:
+        createProductDto.variants.map((v) => ({
+          size: v.size,
+          colour: v.colour,
+          price: v.price,
+          discountPrice: v.discountPrice ?? null,
+          stock: v.stock,
+        })) ?? [],
     });
 
     const savedProduct = await this.productRepo.save(product);
@@ -53,6 +54,7 @@ export class ProductsService {
   async findOne(id: string) {
     const product = await this.productRepo.findOne({
       where: { id },
+      relations: ['category', 'variants'],
     });
     return product;
   }
@@ -65,7 +67,7 @@ export class ProductsService {
       throw new NotFoundException('Product not found!!');
     }
     const updatedProduct = Object.assign(product, updateProductDto);
-    return updatedProduct;
+    return await this.productRepo.save(updatedProduct);
   }
 
   async remove(id: string) {
