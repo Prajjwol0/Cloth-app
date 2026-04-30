@@ -70,7 +70,7 @@ export class ProductsService {
     return await this.productRepo.save(updatedProduct);
   }
 
-  async remove(id: string) {
+  async remove(id: string) { 
     const product = await this.productRepo.findOne({
       where: { id },
     });
