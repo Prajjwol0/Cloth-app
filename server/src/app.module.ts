@@ -8,9 +8,13 @@ import { ProductsModule } from './products/products.module';
 import { ProductVariantModule } from './product-variant/product-variant.module';
 import { AuthModule } from './auth/auth.module';
 import * as dotenv from 'dotenv';
+import { ConfigModule } from '@nestjs/config';
 dotenv.config();
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     TypeOrmModule.forRoot({
       type: process.env.DB_TYPE as any,
       host: process.env.DB_HOST,
