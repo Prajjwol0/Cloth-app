@@ -11,12 +11,16 @@ export class ProductsService {
     @InjectRepository(Product)
     private readonly productRepo: Repository<Product>,
   ) {}
-  async create(createProductDto: CreateProductDto) {
+
+  async create(createProductDto: CreateProductDto, userId: string) {
+    // ADD userId param
     const product = this.productRepo.create({
       name: createProductDto.name,
       description: createProductDto.description,
       brand: createProductDto.brand,
       isActive: createProductDto.isActive ?? true,
+
+      ownerId: userId,
 
       //  CATEGORY
       category: createProductDto.categoryId
@@ -44,7 +48,7 @@ export class ProductsService {
 
   async findAll() {
     return this.productRepo.find({
-      relations: ['category', 'variants'],
+      relations: ['category', 'variants', 'owner'],
       order: {
         createdAt: 'DESC',
       },
@@ -54,7 +58,7 @@ export class ProductsService {
   async findOne(id: string) {
     const product = await this.productRepo.findOne({
       where: { id },
-      relations: ['category', 'variants'],
+      relations: ['category', 'variants', 'owner'],
     });
     return product;
   }
@@ -70,7 +74,7 @@ export class ProductsService {
     return await this.productRepo.save(updatedProduct);
   }
 
-  async remove(id: string) { 
+  async remove(id: string) {
     const product = await this.productRepo.findOne({
       where: { id },
     });

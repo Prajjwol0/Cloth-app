@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Request, // ADD THIS IMPORT
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -26,8 +27,13 @@ export class ProductsController {
   @Post()
   @UseGuards(JwtAuthGuard, RoleGuard) //Paila auth guard run hunxa tespaxi roleguard!!
   @ROLES('shopkeeper')
-  create(@Body() createProductDto: CreateProductDto) {
-    return this.productsService.create(createProductDto);
+  async create(
+    // Make async
+    @Body() createProductDto: CreateProductDto,
+    @Request() req, // ADD THIS
+  ) {
+    const userId = req.user.id; // Get authenticated user ID from JWT
+    return this.productsService.create(createProductDto, userId);
   }
 
   // Public: sabai jana le access garna pauxa (No guards)
