@@ -78,6 +78,7 @@ export class AuthService {
 
     return {
       message: 'User logged in!!',
+      role: user.role,
       accessToken: token,
     };
   }

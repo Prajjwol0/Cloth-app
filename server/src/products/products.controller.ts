@@ -14,7 +14,10 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { RoleGuard } from '../auth/guard/role.guard';
 import { ROLES } from '../auth/roles.decorator';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('products')
+@ApiBearerAuth()
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
