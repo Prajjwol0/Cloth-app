@@ -1,16 +1,26 @@
-import { Body, Controller, Delete, Get, Param, Patch } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  // @Post()
-  // create(@Body() createUserDto: CreateUserDto) {
-  //   console.log('User create() -->', createUserDto);
-
-  //   // return this.usersService.createUser(createUserDto);
+  // @Get('profile')
+  // @UseGuards(AuthGuard('jwt'))
+  // getProfile(@Req() req) {
+  //   console.log('req user id: ', req.payload.sub);
+  //   return this.usersService.profile(req.payload.sub);
   // }
 
   @Get('all')

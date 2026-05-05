@@ -56,6 +56,10 @@ export class CreateProductDto {
   @IsNumber()
   categoryId!: number;
 
+  @ApiProperty({})
+  @IsString()
+  imageUrl!: string;
+
   @ApiPropertyOptional({ example: true })
   @IsOptional()
   @IsBoolean()

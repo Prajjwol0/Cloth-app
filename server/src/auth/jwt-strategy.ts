@@ -7,8 +7,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(private readonly configService: ConfigService) {
     const secret = configService.get<string>('JWT_SECRET');
-    console.log('🔑 JWT_SECRET:', secret ? 'LOADED' : 'UNDEFINED'); // Add this
-    console.log('🔑 FULL SECRET:', secret?.slice(0, 10) + '...'); // First 10 chars
+
     if (!secret) {
       throw new Error('JWT_SECRET is not defined');
     }
@@ -21,8 +20,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
-    console.log('JWT PAYLOAD:', payload);
-
     return {
       id: payload.sub,
       email: payload.email,

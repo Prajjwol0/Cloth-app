@@ -40,6 +40,21 @@ export class UsersService {
     return user;
   }
 
+  // get profile of logged in user
+  // async profile(id: string) {
+  //   const user = await this.userRepo.findOne({
+  //     where: { id },
+  //     select: {
+  //       name: true,
+  //       contact: true,
+  //       email: true,
+  //       role: true,
+  //       id: true,
+  //     },
+  //   });
+  //   return user;
+  // }
+
   async updateUser(id: string, updateUserDto: UpdateUserDto) {
     const user = await this.userRepo.findOne({
       where: { id },

@@ -19,7 +19,7 @@ export class ProductsService {
       description: createProductDto.description,
       brand: createProductDto.brand,
       isActive: createProductDto.isActive ?? true,
-
+      imageUrl: createProductDto.imageUrl,
       ownerId: userId,
 
       //  CATEGORY

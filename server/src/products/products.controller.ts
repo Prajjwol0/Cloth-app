@@ -7,7 +7,9 @@ import {
   Param,
   Delete,
   UseGuards,
-  Request, // ADD THIS IMPORT
+  Request,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -16,6 +18,7 @@ import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { RoleGuard } from '../auth/guard/role.guard';
 import { ROLES } from '../auth/roles.decorator';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('products')
 @ApiBearerAuth()
@@ -27,12 +30,16 @@ export class ProductsController {
   @Post()
   @UseGuards(JwtAuthGuard, RoleGuard) //Paila auth guard run hunxa tespaxi roleguard!!
   @ROLES('shopkeeper')
+  @UseInterceptors(FileInterceptor('file'))
   async create(
-    // Make async
     @Body() createProductDto: CreateProductDto,
-    @Request() req, // ADD THIS
+    @Request() req,
+    @UploadedFile() file: Express.Multer.File,
   ) {
     const userId = req.user.id; // Get authenticated user ID from JWT
+    if (file) {
+      createProductDto.imageUrl = `/uploads/${file.filename}`;
+    }
     return this.productsService.create(createProductDto, userId);
   }
 
